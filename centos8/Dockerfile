@@ -19,4 +19,4 @@ RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
 
 RUN echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >> ~/.bash_profile
 
-ENTRYPOINT ["/bin/bash", "-l"]
+ENTRYPOINT ["/bin/bash", "-l", "-c"]

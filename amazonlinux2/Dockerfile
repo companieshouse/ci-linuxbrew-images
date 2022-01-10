@@ -23,4 +23,4 @@ RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
     gcc && \
     brew cleanup --prune=all
 
-ENTRYPOINT ["/bin/bash", "-l"]
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
