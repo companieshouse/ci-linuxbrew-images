@@ -1,7 +1,10 @@
 FROM centos:8
 
+ARG ENV_FILE="/root/.bashrc"
+
 ENV HOMEBREW_NO_ENV_HINTS=1
 ENV HOMEBREW_NO_ANALYTICS=1
+ENV BASH_ENV=${ENV_FILE}
 
 RUN yum -y groupinstall 'Development Tools'
 
@@ -17,6 +20,6 @@ RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
     gcc && \
     brew cleanup --prune=all
 
-RUN echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >> ~/.bash_profile
+RUN echo -e "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\n$(cat ${ENV_FILE})" > ${ENV_FILE}
 
-ENTRYPOINT ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-c"]

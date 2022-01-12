@@ -1,7 +1,10 @@
 FROM alpine:3
 
+ARG ENV_FILE="/root/.bashrc"
+
 ENV HOMEBREW_NO_ENV_HINTS=1
 ENV HOMEBREW_NO_ANALYTICS=1
+ENV BASH_ENV=${ENV_FILE}
 
 # Homebrew won't work with Alpine's latest Ruby
 ARG APK_REPO_VER="3.11"
@@ -27,12 +30,13 @@ RUN apk add --no-cache --upgrade \
     ruby-irb~=${RUBY_PKG_VER} \
     ruby-json~=${RUBY_PKG_VER}
 
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && \
-    echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >> ~/.bash_profile
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
     brew install \
     gcc && \
     brew cleanup --prune=all
 
-ENTRYPOINT ["/bin/bash", "-l", "-c"]
+RUN echo -e "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\n$(cat ${ENV_FILE})" > ${ENV_FILE}
+
+ENTRYPOINT ["/bin/bash", "-c"]
